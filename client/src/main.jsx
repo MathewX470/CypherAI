@@ -7,8 +7,8 @@ import DashboardPage from "./routes/dashboardPage/DashboardPage";
 import ChatPage from "./routes/chatPage/ChatPage";
 import RootLayout from "./layouts/rootLayout/RootLayout";
 import DashboardLayout from "./layouts/dashboardLayout/DashboardLayout";
-import SignInPage from "./routes/signInPage/SigninPage";
-import SignUpPage from "./routes/signUpPage/SignupPage";
+import SignInPage from "./routes/signinPage/SigninPage";
+import SignUpPage from "./routes/signupPage/SignupPage";
 import { ClerkProvider } from "@clerk/clerk-react";
 
 
