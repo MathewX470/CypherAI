@@ -1,19 +1,21 @@
-import { useRef } from "react";
+
 import "./chatPage.css";
-import { useEffect } from "react";
+import NewPrompt from "../../components/newPrompt/newPrompt";
 
 const ChatPage = () => {
   
+
   return (
     <div className="chatPage">
       <div className="wrapper">
         <div className="chat">
           <div className="message">Test Message ai lore</div>
           <div className="message user">
-            Test Message user Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Impedit odit, unde alias animi pariatur officia repudiandae
-            modi dolores perspiciatis amet temporibus quibusdam itaque autem.
-            Nulla similique alias expedita cumque reprehenderit?
+            Test Message user Lorem ipsum dolor sit, amet consectetur
+            adipisicing elit. Corrupti illo debitis doloribus iusto, amet
+            similique asperiores sequi at deleniti esse exercitationem
+            reiciendis minus molestias accusantium maiores, ratione sapiente
+            nostrum quasi?
           </div>
           <div className="message">Test Message ai</div>
           <div className="message user">Test Message user</div>
@@ -25,16 +27,9 @@ const ChatPage = () => {
           <div className="message user">Test Message user</div>
           <div className="message">Test Message ai</div>
           <div className="message user">Test Message user</div>
-          <div className="message">Test Message ai</div>
-          <div className="message user">Test Message user</div>
-          <div className="message">Test Message ai</div>
-          <div className="message user">Test Message user</div>
-          <div className="message">Test Message ai</div>
-          <div className="message user">Test Message user</div>
-          <div className="message">Test Message ai</div>
-          <div className="message user">Test Message user</div>
-          <div className="message">Test Message ai</div>
-          <div className="message user">Test Message user</div>
+
+
+          <NewPrompt />
         </div>
       </div>
     </div>
