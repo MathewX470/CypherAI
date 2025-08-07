@@ -14,7 +14,6 @@ const NewPrompt = () => {
   return (
     <>
       {/* add new chat */}
-      test
       <div className="endChat" ref={endRef}></div>
       <form className="newForm">
         <label htmlFor="file">
