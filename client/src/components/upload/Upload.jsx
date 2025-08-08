@@ -23,6 +23,10 @@ const authenticator = async () => {
   }
 };
 const Upload = ({ setImg }) => {
+
+  const ikUploadRef = useRef(null);
+
+
   // 👉 Upload Handlers
   const handleUploadStart = (evt) => {
     console.log("Upload Started:", evt);
@@ -61,7 +65,14 @@ const Upload = ({ setImg }) => {
         onUploadProgress={handleUploadProgress}
         onSuccess={handleUploadSuccess}
         onError={handleUploadError}
+        style={{ display: "none" }} // Hide the upload button
+        ref={ikUploadRef}
       />
+      {
+        <label onClick={() => ikUploadRef.current.click()}>
+          <img src="/attachment.png" alt="" />
+        </label>
+      }
     </IKContext>
   );
 };

@@ -19,10 +19,13 @@ const NewPrompt = () => {
   return (
     <>
       {/* add new chat */}
+      {img.isLoading && <div className="loading">Uploading...</div>}
       {img.dbData?.filePath && (
         <IKImage
           urlEndpoint={import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
           path={img.dbData?.filePath}
+          width="380"
+          transformation={[{width:380}]}
         />
       )}
       <div className="endChat" ref={endRef}></div>

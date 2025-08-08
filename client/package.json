@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.35.3",
+    "@google/genai": "^1.13.0",
     "@imagekit/react": "^5.0.1",
     "@tailwindcss/vite": "^4.1.11",
     "bootstrap": "^5.3.7",
