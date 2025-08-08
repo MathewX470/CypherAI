@@ -23,6 +23,7 @@
       p,
       li {
         margin: 10px 0px;
+        list-style-type:disc;
       }
 
       .message {

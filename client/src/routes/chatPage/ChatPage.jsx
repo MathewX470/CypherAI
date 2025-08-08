@@ -1,6 +1,6 @@
 
 import "./chatPage.css";
-import NewPrompt from "../../components/newPrompt/newPrompt";
+import NewPrompt from "../../components/newPrompt/NewPrompt.jsx";
 
 const ChatPage = () => {
   
