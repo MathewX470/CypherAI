@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.35.3",
-    "@google/genai": "^1.13.0",
+    "@google/generative-ai": "^0.24.1",
     "@imagekit/react": "^5.0.1",
     "@tailwindcss/vite": "^4.1.11",
     "bootstrap": "^5.3.7",
@@ -19,6 +19,7 @@
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.7.0",
     "react-type-animation": "^3.2.0",
     "tailwindcss": "^4.1.11"

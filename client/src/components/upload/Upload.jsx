@@ -29,8 +29,18 @@ const Upload = ({ setImg }) => {
 
   // 👉 Upload Handlers
   const handleUploadStart = (evt) => {
-    console.log("Upload Started:", evt);
-    setImg((prev) => ({ ...prev, isLoading: true }));
+    const file = evt.target.files[0];
+
+    const reader = new FileReader();
+    reader.onloadend=()=>{
+    setImg((prev) => ({ ...prev, isLoading: true,aiData:{
+      inlineData:{
+        data:reader.result.split(",")[1],
+        mimeType:file.type,
+      }
+    } }));
+    }
+    reader.readAsDataURL(file);
   };
 
   const handleUploadProgress = (progress) => {
