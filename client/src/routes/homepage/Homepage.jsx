@@ -7,6 +7,28 @@ const Homepage = () => {
   // 1. Initialize typingStatus with "user" to match the first speaker in the sequence
   const [typingStatus, setTypingStatus] = useState("user");
 
+  const test = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/test", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Backend test successful:", data);
+      } else {
+        console.error(
+          "Backend test failed:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Network error during backend test:", error);
+    }
+  };
+
   return (
     <div className="homepage">
       <img src="/orbital.png" alt="" className="orbital" />
@@ -14,12 +36,13 @@ const Homepage = () => {
         <h1>Cypher AI</h1>
         <h2>Your Private, Intelligent AI Chat Companion</h2>
         <h3>
-          Whether you’re seeking help, exploring knowledge, or building with AI,
+          Whether youre seeking help, exploring knowledge, or building with AI,
           Cypher AI is your undercover ally — always observing, always learning,
           always ready.
         </h3>
         <Link to="/dashboard">Get Started</Link>
-      </div>  
+        <button onClick={test}>TEST BACKEND AUTH</button>
+      </div>
       <div className="right">
         <div className="imgContainer">
           <div className="bgContainer">
