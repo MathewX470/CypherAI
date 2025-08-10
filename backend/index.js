@@ -171,6 +171,33 @@ app.put("/api/chats/:id", requireAuth(), async (req, res) => {
   }
 });
 
+app.delete("/api/chats/:id", requireAuth(), async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+  const chatId = req.params.id;
+
+  try {
+    // Delete the chat from the Chat collection
+    await Chat.deleteOne({ _id: chatId, userId });
+
+    // Remove the chat from the UserChats collection
+    await UserChats.updateOne(
+      { userId },
+      {
+        $pull: {
+          chats: { _id: chatId },
+        },
+      }
+    );
+
+    console.log(`Chat ${chatId} deleted successfully for user ${userId}`);
+    res.status(200).json({ message: "Chat deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting chat:", error);
+    res.status(500).send("Internal Server Error|Error deleting chat");
+  }
+});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(401).send("Unauthorized|Please login to access this resource");
