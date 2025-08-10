@@ -1,5 +1,5 @@
 import "./dashboardPage.css";
-import {useAuth} from "@clerk/clerk-react"
+import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -7,19 +7,19 @@ const DashboardPage = () => {
   // Access the client
   const queryClient = useQueryClient();
 
-  const navigate=useNavigate
-  
+  const navigate = useNavigate();
+
   // Mutations
   const mutation = useMutation({
-    mutationFn:(text)=>{
+    mutationFn: (text) => {
       return fetch(`${import.meta.env.VITE_API_URL}/api/chats`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    }).then((res) => res.json());
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      }).then((res) => res.json());
     },
     onSuccess: (id) => {
       // Invalidate and refetch
