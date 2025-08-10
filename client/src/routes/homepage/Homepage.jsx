@@ -7,27 +7,13 @@ const Homepage = () => {
   // 1. Initialize typingStatus with "user" to match the first speaker in the sequence
   const [typingStatus, setTypingStatus] = useState("user");
 
-  const test = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/test", {
-        method: "GET",
-        credentials: "include",
-      });
+  // const test = async () => {
+   
+  //     const response = await fetch("http://localhost:3000/api/test", {
+  //       credentials: "include",
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Backend test successful:", data);
-      } else {
-        console.error(
-          "Backend test failed:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Network error during backend test:", error);
-    }
-  };
+  // };
 
   return (
     <div className="homepage">
@@ -41,7 +27,7 @@ const Homepage = () => {
           always ready.
         </h3>
         <Link to="/dashboard">Get Started</Link>
-        <button onClick={test}>TEST BACKEND AUTH</button>
+        {/* <button onClick={test}>TEST BACKEND AUTH</button> */}
       </div>
       <div className="right">
         <div className="imgContainer">

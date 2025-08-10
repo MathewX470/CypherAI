@@ -4,8 +4,10 @@ import "./newPrompt.css";
 import { useEffect, useRef, useState } from "react";
 import model from "../../lib/gemini";
 import Markdown from "react-markdown";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { set } from "mongoose";
 
-const NewPrompt = () => {
+const NewPrompt = ({ data }) => {
   const [prompt, setPrompt] = useState("");
   const [answer, setAnswer] = useState("");
   const [img, setImg] = useState({
@@ -16,22 +18,64 @@ const NewPrompt = () => {
   });
 
   const chat = model.startChat({
-    history: [],
+    history: [data?.history.map(({role,parts})=>(
+      {role,parts:[{text: parts[0].text}]}
+    ))],
     generationConfig: {
       // maxOutputTokens:100,
     },
   });
 
   const endRef = useRef(null);
+  const formRef = useRef(null);
 
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [answer, prompt, img.dbData]);
+  }, [data, prompt, answer, img.dbData]);
 
-  const add = async (text) => {
+  // Access the client
+  const queryClient = useQueryClient();
+
+  // Mutations
+  const mutation = useMutation({
+    mutationFn: () => {
+      return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: prompt.length ? prompt : undefined,
+          answer,
+          img: img.dbData?.filePath || undefined,
+        }),
+      }).then((res) => res.json());
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient
+        .invalidateQueries({ queryKey: ["chat", data._id] })
+        .then(() => {
+          formRef.current.reset(); // Reset the form after successful submission
+          setPrompt("");
+          setAnswer("");
+          setImg({
+            isLoading: false,
+            error: "",
+            dbData: {},
+            aiData: {},
+          });
+        });
+    },
+    onError: (error) => {
+      console.error("Error updating chat:", error);
+    },
+  });
+
+  const add = async (text, isInitial) => {
+    if (!isInitial) setPrompt(text);
     try {
-      setPrompt(text);
-
       const result = await chat.sendMessageStream(
         Object.entries(img.aiData).length ? [img.aiData, text] : [text]
       );
@@ -45,12 +89,7 @@ const NewPrompt = () => {
         setAnswer(accumulatedText);
       }
 
-      setImg({
-        isLoading: false,
-        error: "",
-        dbData: {},
-        aiData: {},
-      });
+      mutation.mutate();
     } catch (error) {
       console.log("response error", error);
     }
@@ -62,10 +101,21 @@ const NewPrompt = () => {
 
     if (!text) return;
 
-    add(text);
-
-    
+    setPrompt(text); // Set the prompt to display it in the UI
+    add(text, false);
   };
+
+  // in production dont need it
+  const hasRun = useRef(false);
+
+  useEffect(() => {
+    if (!hasRun.current) {
+      if (data?.history?.length === 1) {
+        add(data.history[0].parts[0].text, true);
+      }
+    }
+    hasRun.current = true; // Set the flag to true after the first run
+  }, []);
 
   return (
     <>
@@ -86,7 +136,7 @@ const NewPrompt = () => {
         </div>
       )}
       <div className="endChat" ref={endRef}></div>
-      <form className="newForm" onSubmit={handleSubmit}>
+      <form className="newForm" onSubmit={handleSubmit} ref={formRef}>
         <Upload setImg={setImg} />
         <input id="file" type="file" multiple={false} hidden />
         <input type="text" name="text" placeholder="Ask anything..." />

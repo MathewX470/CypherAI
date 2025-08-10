@@ -44,29 +44,34 @@ app.get("/api/upload", (req, res) => {
   res.send(result);
 });
 
-app.get("/api/test",requireAuth(), (req, res) => {
-  try {
-    const auth = getAuth(req);
+// app.get("/api/test", (req, res) => {
+//   try {
+//     const auth = getAuth(req);
 
-    if (auth.userId) {
-      console.log("✅ User is authenticated:", auth.userId);
-      res.json({
-        message: "Authenticated user",
-        userId: auth.userId,
-        sessionId: auth.sessionId,
-      });
-    } else {
-      console.log("ℹ️ User is not authenticated - anonymous access");
-      res.json({ message: "Anonymous user - backend connection working!" });
-    }
-  } catch (error) {
-    console.error("❌ Auth check error:", error);
-    res.status(500).json({ error: "Server error", details: error.message });
-  }
-});
+//     if (auth.userId) {
+//       console.log("✅ User is authenticated:", auth.userId);
+//       res.json({
+//         message: "Authentication successful!",
+//         userId: auth.userId,
+//         authenticated: true,
+//       });
+//     } else {
+//       console.log("ℹ️ User is not authenticated - anonymous access");
+//       res.json({
+//         message: "Not authenticated - please log in",
+//         authenticated: false,
+//       });
+//     }
+//   } catch (error) {
+//     console.error("❌ Auth check error:", error);
+//     res.status(500).json({ error: "Server error", details: error.message });
+//   }
+// });
 
 app.post("/api/chats", async (req, res) => {
-  const { userId, text } = req.body;
+  const auth = getAuth(req); // Use getAuth instead of deprecated req.auth
+  const userId = auth.userId; // Get userId from auth object
+  const { text } = req.body;
 
   try {
     // CREATE A NEW CHAT
@@ -110,9 +115,65 @@ app.post("/api/chats", async (req, res) => {
   }
 });
 
+app.get("/api/userchats", requireAuth(), async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+
+  try {
+    const userChats = await UserChats.find({ userId });
+    res.status(200).send(userChats[0].chats);
+  } catch (error) {
+    console.error("Error fetching user chats:", error);
+    res.status(500).send("Internal Server Error|Error fetching user chats");
+  }
+});
+
+app.get("/api/chats/:id", requireAuth(), async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+
+  try {
+    const chat = await Chat.findOne({ _id: req.params.id, userId });
+    res.status(200).send(chat);
+  } catch (error) {
+    console.error("Error fetching chats:", error);
+    res.status(500).send("Internal Server Error|Error fetching chats");
+  }
+});
+
+app.put("/api/chats/:id", requireAuth(), async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+  const { prompt, answer, img } = req.body;
+
+  const newItems = [
+    ...(prompt
+      ? [{ role: "user", parts: [{ text: prompt }], ...(img && { img }) }]
+      : []),
+    { role: "model", parts: [{ text: answer }] },
+  ];
+  try {
+    const updatedChat = await Chat.updateOne(
+      { _id: req.params.id, userId },
+      {
+        $push: {
+          history: {
+            $each: newItems,
+          },
+        },
+      }
+    );
+
+    res.status(200).send(updatedChat);
+  } catch (error) {
+    console.error("Error updating chat:", error);
+    res.status(500).send("Internal Server Error|Error updating chat");
+  }
+});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).send(err.message || "Internal Server Error");
+  res.status(401).send("Unauthorized|Please login to access this resource");
 });
 
 app.listen(port, () => {
