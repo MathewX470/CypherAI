@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import model from "../../lib/gemini";
 import Markdown from "react-markdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { set } from "mongoose";
 
 const NewPrompt = ({ data }) => {
   const [prompt, setPrompt] = useState("");

@@ -1,0 +1,16 @@
+{
+  "name": "cypher-ai",
+  "version": "1.0.0",
+  "description": "Cypher AI - Full Stack Application",
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "cd backend && npm start",
+    "dev:client": "cd client && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "npm install && cd client && npm install && cd ../backend && npm install"
+  },
+  "keywords": ["ai", "chat", "react", "nodejs"],
+  "author": "",
+  "license": "ISC",
+  "workspaces": ["client", "backend"]
+}
